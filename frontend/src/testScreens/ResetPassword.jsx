@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
@@ -33,7 +33,10 @@ const ResetPassword = () => {
     setLoading(true);
     setMessage("");
     try {
-      const res = await axios.post(`${BASE_URL}/employeesSide/request_reset.php`, { email });
+      const res = await axios.post(
+        `${BASE_URL}/employeesSide/request_reset.php`,
+        { email },
+      );
       if (res.data.success) {
         setStep(2);
         setMessage("✅ Code sent to your email.");
@@ -51,7 +54,10 @@ const ResetPassword = () => {
     setLoading(true);
     setMessage("");
     try {
-      const res = await axios.post(`${BASE_URL}/employeesSide/verify_code.php`, { email, code });
+      const res = await axios.post(
+        `${BASE_URL}/employeesSide/verify_code.php`,
+        { email, code },
+      );
       if (res.data.success) {
         setVerified(true);
         setMessage("✅ Code verified. You can now set a new password.");
@@ -77,11 +83,14 @@ const ResetPassword = () => {
     }
 
     try {
-      const res = await axios.post(`${BASE_URL}/employeesSide/reset_password.php`, {
-        email,
-        code,
-        newPassword,
-      });
+      const res = await axios.post(
+        `${BASE_URL}/employeesSide/reset_password.php`,
+        {
+          email,
+          code,
+          newPassword,
+        },
+      );
 
       if (res.data.success) {
         setSuccessPopup(true);
@@ -118,8 +127,12 @@ const ResetPassword = () => {
         <div className="w-full max-w-3xl mx-auto bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl p-8 border border-gray-100">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-800">🔒 Reset Password</h2>
-              <p className="text-sm md:text-base text-slate-500">Enter your email to get a verification code</p>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-800">
+                🔒 Reset Password
+              </h2>
+              <p className="text-sm md:text-base text-slate-500">
+                Enter your email to get a verification code
+              </p>
             </div>
 
             <div className="text-sm md:text-base text-slate-400">{step}/3</div>
@@ -129,7 +142,16 @@ const ResetPassword = () => {
           <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden mb-6">
             <div
               className={`h-full bg-gradient-to-r from-sky-600 to-indigo-600 rounded-full transition-all`}
-              style={{ width: step === 1 ? "12%" : step === 2 && !verified ? "55%" : step === 3 ? "100%" : "0%" }}
+              style={{
+                width:
+                  step === 1
+                    ? "12%"
+                    : step === 2 && !verified
+                      ? "55%"
+                      : step === 3
+                        ? "100%"
+                        : "0%",
+              }}
             />
           </div>
 
@@ -147,7 +169,9 @@ const ResetPassword = () => {
           {/* STEP 1 */}
           {step === 1 && (
             <form onSubmit={handleRequestCode} className="space-y-5">
-              <label className="text-sm font-medium text-slate-700">Email address</label>
+              <label className="text-sm font-medium text-slate-700">
+                Email address
+              </label>
               <div className="relative">
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
                   <Mail className="w-6 h-6" />
@@ -168,12 +192,21 @@ const ResetPassword = () => {
                   disabled={loading}
                   className="flex-1 inline-flex items-center justify-center gap-3 py-4 rounded-lg bg-gradient-to-r from-sky-600 to-indigo-600 text-white text-lg font-semibold shadow-md hover:opacity-95 transition"
                 >
-                  {loading ? "Sending..." : <>Send Code <ArrowRightCircle className="w-5 h-5" /></>}
+                  {loading ? (
+                    "Sending..."
+                  ) : (
+                    <>
+                      Send Code <ArrowRightCircle className="w-5 h-5" />
+                    </>
+                  )}
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => { setEmail(""); setMessage(""); }}
+                  onClick={() => {
+                    setEmail("");
+                    setMessage("");
+                  }}
                   className="w-36 py-4 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition"
                 >
                   Clear
@@ -185,7 +218,9 @@ const ResetPassword = () => {
           {/* STEP 2 - Verify */}
           {step === 2 && !verified && (
             <form onSubmit={handleVerifyCode} className="space-y-5">
-              <label className="text-sm font-medium text-slate-700">Verification code</label>
+              <label className="text-sm font-medium text-slate-700">
+                Verification code
+              </label>
               <div className="relative">
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
                   <KeyRound className="w-6 h-6" />
@@ -223,7 +258,9 @@ const ResetPassword = () => {
           {/* STEP 3 - Reset */}
           {step === 3 && verified && (
             <form onSubmit={handleResetPassword} className="space-y-5">
-              <label className="text-sm font-medium text-slate-700">New password</label>
+              <label className="text-sm font-medium text-slate-700">
+                New password
+              </label>
 
               <div className="relative">
                 {/* input gets extra right padding to make room for the dislocated button */}
@@ -243,11 +280,17 @@ const ResetPassword = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-[-12px] top-1/2 -translate-y-1/2 z-10 bg-white border border-slate-200 rounded-full p-2 shadow-sm text-slate-600 hover:shadow-md transition"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
 
-              <label className="text-sm font-medium text-slate-700">Confirm password</label>
+              <label className="text-sm font-medium text-slate-700">
+                Confirm password
+              </label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -275,7 +318,10 @@ const ResetPassword = () => {
 
                 <button
                   type="button"
-                  onClick={() => { setStep(2); setVerified(false); }}
+                  onClick={() => {
+                    setStep(2);
+                    setVerified(false);
+                  }}
                   className="w-36 py-4 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition"
                 >
                   Back
@@ -284,9 +330,11 @@ const ResetPassword = () => {
             </form>
           )}
 
-
           <div className="mt-6 text-center text-sm text-slate-400">
-            POWERED BY <span className="font-semibold text-slate-700">Central Juan I.T. Solutions</span>
+            POWERED BY{" "}
+            <span className="font-semibold text-slate-700">
+              Central Juan I.T. Solutions
+            </span>
           </div>
         </div>
       </motion.div>
@@ -302,9 +350,15 @@ const ResetPassword = () => {
             <div className="mx-auto w-20 h-20 rounded-full bg-green-50 flex items-center justify-center mb-4">
               <CheckCircle className="w-10 h-10 text-green-600" />
             </div>
-            <h3 className="text-xl font-bold text-slate-800 mb-2">Password Reset</h3>
-            <p className="text-sm text-slate-600 mb-4">Your password has been updated successfully.</p>
-            <p className="text-xs text-slate-400 mb-3">Redirecting in {countdown} second{countdown !== 1 ? "s" : ""}…</p>
+            <h3 className="text-xl font-bold text-slate-800 mb-2">
+              Password Reset
+            </h3>
+            <p className="text-sm text-slate-600 mb-4">
+              Your password has been updated successfully.
+            </p>
+            <p className="text-xs text-slate-400 mb-3">
+              Redirecting in {countdown} second{countdown !== 1 ? "s" : ""}…
+            </p>
             <div className="flex gap-3">
               <a
                 href="https://hris.centraljuan.com"
