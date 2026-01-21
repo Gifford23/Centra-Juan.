@@ -171,7 +171,7 @@ const EmployeeDTR = ({ employeeId }) => {
 
       {/* --- Data Table --- */}
       <div className="overflow-x-auto grow bg-gray-50/30">
-        <table className="w-full text-left border-collapse">
+        <table className="w-full text-left border-collapse table-fixed">
           <thead>
             <tr className="border-b border-gray-200 bg-gray-50/50">
               <th className="py-4 px-6 text-xs font-bold uppercase text-gray-500 tracking-wider w-[20%]">
@@ -269,9 +269,11 @@ const EmployeeDTR = ({ employeeId }) => {
                     </td>
 
                     {/* Credit Column */}
-                    <td className="py-4 px-6 text-center">
-                      <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-50 font-bold text-gray-700 text-sm border border-gray-200">
-                        {record.days_credited || 0}
+                    <td className="py-4 px-6 align-middle">
+                      <div className="flex justify-center">
+                        <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-50 font-bold text-gray-700 text-sm border border-gray-200">
+                          {record.days_credited || 0}
+                        </div>
                       </div>
                     </td>
 
