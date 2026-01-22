@@ -180,8 +180,9 @@ export default function EmployeeWeeklyCalendarMobile({
   const colorFor = (id) => {
     if (!id) return "linear-gradient(90deg,#e5e7eb,#f3f4f6)";
     const n = parseInt(String(id).replace(/\D/g, "") || "0", 10);
-    const hue = (n * 137) % 360;
-    return `linear-gradient(90deg, hsl(${hue} 70% 45%), hsl(${(hue + 20) % 360} 70% 50%))`;
+    // Generate blue spectrum colors (200-260 hue range for blues)
+    const blueHue = 200 + ((n * 60) % 60); // Blues between 200-260
+    return `linear-gradient(90deg, hsl(${blueHue} 70% 45%), hsl(${blueHue + 20} 70% 50%))`;
   };
 
   const todayYMD = new Date().toISOString().slice(0, 10);
@@ -247,29 +248,51 @@ export default function EmployeeWeeklyCalendarMobile({
         </div>
       </div>
 
-      <div className="p-3 bg-white shadow-sm rounded-2xl">
+      <div className="p-4 bg-white shadow-lg rounded-2xl border border-gray-100">
         {/* Weekly View (hidden when month is active) */}
         {viewMode === "week" && (
           <>
-            <div className="grid grid-cols-7 gap-2">
-              {days.map((d) => {
-                const isToday = todayYMD === d;
-                return (
-                  <div
-                    key={d}
-                    className={`text-center text-xs font-medium pb-1 rounded ${
-                      isToday
-                        ? "text-white bg-green-600 shadow-sm"
-                        : "text-gray-600"
-                    }`}
-                  >
-                    {headerLabel(d)}
-                  </div>
-                );
-              })}
+            {/* Professional Week Header */}
+            <div className="mb-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-lg font-bold text-gray-800">
+                  Weekly Schedule
+                </h3>
+                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                  {fmtLongDate(baseMonday)}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-7 gap-1">
+                {days.map((d) => {
+                  const isToday = todayYMD === d;
+                  const dayName = headerLabel(d);
+                  const dayNum = new Date(d).getDate();
+                  return (
+                    <div
+                      key={d}
+                      className={`text-center py-2 px-1 rounded-lg transition-all ${
+                        isToday
+                          ? "bg-gradient-to-r from-green-500 to-green-600 text-white shadow-md"
+                          : "bg-gray-50 text-gray-700 border border-gray-200"
+                      }`}
+                    >
+                      <div className="text-xs font-semibold uppercase tracking-wide">
+                        {dayName}
+                      </div>
+                      <div
+                        className={`text-lg font-bold mt-1 ${isToday ? "text-white" : "text-gray-900"}`}
+                      >
+                        {dayNum}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
-            <div className="grid grid-cols-7 gap-2 mt-2">
+            {/* Professional Schedule Grid */}
+            <div className="grid grid-cols-7 gap-2">
               {days.map((d) => {
                 const s = schedules[d];
                 const isToday = todayYMD === d;
@@ -277,40 +300,41 @@ export default function EmployeeWeeklyCalendarMobile({
                   return (
                     <div
                       key={d}
-                      className={`flex items-center justify-center h-12 text-xs border border-gray-100 rounded-lg ${
+                      className={`h-16 rounded-xl border-2 border-dashed flex items-center justify-center transition-all ${
                         isToday
-                          ? "text-green-700 border-green-300 bg-green-50 font-semibold"
-                          : "text-gray-400 bg-gray-50"
+                          ? "border-green-400 bg-green-50"
+                          : "border-gray-200 bg-gray-50"
                       }`}
                     >
-                      —
+                      <span
+                        className={`text-xs font-medium ${isToday ? "text-green-600" : "text-gray-400"}`}
+                      >
+                        No Shift
+                      </span>
                     </div>
                   );
                 }
-                const bgStyle = {
-                  background: isToday
-                    ? "linear-gradient(90deg, #10b981, #059669)"
-                    : colorFor(s.work_time_id),
-                  borderRadius: 10,
-                  color: "#fff",
-                };
+
                 return (
                   <button
                     key={d}
                     onClick={() => setSelected({ date: d, shift: s })}
-                    className={`flex flex-col items-center justify-center h-12 p-2 truncate shadow-sm ${
-                      isToday ? "ring-2 ring-green-400 ring-offset-1" : ""
+                    className={`h-16 rounded-xl p-3 flex flex-col items-center justify-center text-white shadow-lg transform transition-all hover:scale-105 active:scale-95 ${
+                      isToday ? "ring-2 ring-green-400 ring-offset-2" : ""
                     }`}
-                    style={bgStyle}
+                    style={{
+                      background: isToday
+                        ? "linear-gradient(135deg, #10b981, #059669)"
+                        : colorFor(s.work_time_id),
+                    }}
                     title={`${s.shift_name || s.label || "Shift"} ${s.start_time || ""}-${s.end_time || ""}`}
                   >
-                    <div className="text-xs font-semibold truncate max-w-[80px]">
+                    <div className="text-xs font-bold text-center leading-tight truncate w-full">
                       {s.shift_name || s.label || "Shift"}
                     </div>
                     {(s.start_time || s.end_time) && (
-                      <div className="text-[11px] truncate max-w-[80px]">
-                        {(s.start_time || "") +
-                          (s.end_time ? ` - ${s.end_time}` : "")}
+                      <div className="text-[10px] mt-1 opacity-90 font-medium text-center">
+                        {s.start_time || "--"} - {s.end_time || "--"}
                       </div>
                     )}
                   </button>
@@ -318,8 +342,16 @@ export default function EmployeeWeeklyCalendarMobile({
               })}
             </div>
 
-            <div className="mt-3 text-xs text-gray-500">
-              Tap a shift for details.
+            {/* Professional Footer */}
+            <div className="mt-4 flex items-center justify-between">
+              <div className="text-xs text-gray-500 flex items-center gap-2">
+                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <span>Scheduled Shift</span>
+              </div>
+              <div className="text-xs text-gray-500 flex items-center gap-2">
+                <div className="w-2 h-2 border-2 border-dashed border-gray-300 rounded-full"></div>
+                <span>No Shift</span>
+              </div>
             </div>
           </>
         )}
@@ -427,7 +459,7 @@ export default function EmployeeWeeklyCalendarMobile({
                 <div
                   className="text-2xl font-bold tracking-wide"
                   style={{
-                    color: `hsl(${(parseInt(String(selected.shift.work_time_id || 0).replace(/\D/g, "")) * 137) % 360} 70% 45%)`,
+                    color: `hsl(${200 + ((parseInt(String(selected.shift.work_time_id || 0).replace(/\D/g, "")) * 60) % 60)} 70% 45%)`,
                   }}
                 >
                   {selected.shift.start_time || "—"}

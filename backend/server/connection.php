@@ -1,6 +1,6 @@
 <?php
 // connection.php
-$servername = "localhost";
+$servername = "127.0.0.1";
 $username = "root";
 $password = "";
 //$dbname = "central_juan_hris_deployed";

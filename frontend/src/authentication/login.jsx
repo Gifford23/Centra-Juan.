@@ -35,7 +35,7 @@ export default function Login() {
 
     try {
       const response = await axios.post(
-        "/api/login.php",
+        `${BASE_URL}/login.php`,
         { username, password },
         { headers: { "Content-Type": "application/json" } },
       );

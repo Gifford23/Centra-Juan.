@@ -9,7 +9,6 @@
 // //  - monthly recurrence uses the day-of-month from effective_date (no extra DB field)
 // //  - occurrence_limit is supported and sent when provided
 
-
 // ShiftSchedulePage.jsx
 import React, { useEffect, useState } from "react";
 import { Typography, Box, Button } from "@mui/material";
@@ -23,7 +22,7 @@ import {
   useDeleteSchedule,
 } from "../schedule-manager-hooks/useScheduleHook";
 import { useSession } from "../../../context/SessionContext";
-import usePermissions from "../../../users/hooks/usePermissions"; 
+import usePermissions from "../../../users/hooks/usePermissions";
 
 import AssignScheduleModal from "./AssignScheduleModal";
 import ScheduleList from "./SheduleList";
@@ -32,7 +31,7 @@ import LayoutSMDashboard from "./LayouSMDashboard";
 export default function ShiftSchedulePage() {
   const { user } = useSession(); // ✅ get user FIRST
   // const { permissions, loading: permLoading } = usePermissions(user?.role); // ✅ now safe
-  const { permissions, loading: permLoading } = usePermissions(user?.username); 
+  const { permissions, loading: permLoading } = usePermissions(user?.username);
 
   const { schedules, fetchSchedules } = useScheduleHook();
   const { createSchedule } = useCreateSchedule();
@@ -43,12 +42,28 @@ export default function ShiftSchedulePage() {
   const [employees, setEmployees] = useState([]);
 
   const [openAssignModal, setOpenAssignModal] = useState(false);
-const breadcrumbItems = [
-  !permLoading && permissions?.attendance_dtr && { label: 'Horizon Time & Attendance', path: '/attendanceRecord' },
-  !permLoading && permissions?.attendance_log && { label: 'Attendance Logs', path: '/attendance' },
-  !permLoading && permissions?.leave_access && { label: 'Manage Leave', path: '/ApproveLeavePage' },
-  !permLoading && permissions?.schedule_management && { label: 'Schedule Management', path: '/ShiftSchedulePage' },
-].filter(Boolean); // remove any falsy (unauthorized) entries
+  const breadcrumbItems = [
+    !permLoading &&
+      permissions?.attendance_dtr && {
+        label: "Horizon Time & Attendance",
+        path: "/attendanceRecord",
+      },
+    !permLoading &&
+      permissions?.attendance_log && {
+        label: "Attendance Logs",
+        path: "/attendance",
+      },
+    !permLoading &&
+      permissions?.leave_access && {
+        label: "Manage Leave",
+        path: "/ApproveLeavePage",
+      },
+    !permLoading &&
+      permissions?.schedule_management && {
+        label: "Schedule Management",
+        path: "/ShiftSchedulePage",
+      },
+  ].filter(Boolean); // remove any falsy (unauthorized) entries
 
   // Edit flow state is handled inside ScheduleList (it contains edit modal),
   // but parent provides update/delete helpers.
@@ -63,7 +78,11 @@ const breadcrumbItems = [
         if (backdrop) backdrop.style.zIndex = "20050";
         if (container) container.style.zIndex = "20060";
         if (typeof options.didOpen === "function") {
-          try { options.didOpen(popupEl); } catch (e) { /* ignore */ }
+          try {
+            options.didOpen(popupEl);
+          } catch (e) {
+            /* ignore */
+          }
         }
       },
     });
@@ -82,20 +101,24 @@ const breadcrumbItems = [
   const refreshAll = () => fetchSchedules();
 
   return (
-    
     <div className="p-4">
       <div className="block md:hidden w-full bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 px-4 py-2 text-sm shadow-sm">
-  This view works better on desktop for full functionality.
-</div>
-            <div className="sticky flex flex-col w-full pb-3 pl-5 border-b-2 gap-y-2 Glc-dashboard-bg-header">
+        This view works better on desktop for full functionality.
+      </div>
+      <div className="sticky flex flex-col w-full pb-3 pl-5 border-b-2 gap-y-2 Glc-dashboard-bg-header">
         <span className="text-2xl font-semibold">Shift Schedule</span>
 
         {/* Hidden on small screens, visible from md (>=768px) */}
         {/* <div className="hidden md:block"> */}
-          <Breadcrumbs items={breadcrumbItems} />
+        <Breadcrumbs items={breadcrumbItems} />
         {/* </div> */}
       </div>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={3}
+      >
         {/* <Typography variant="h4">Shift Schedule Management</Typography> */}
         {/* <Button variant="contained" onClick={() => setOpenAssignModal(true)}>Assign Schedule</Button> */}
       </Box>
@@ -112,7 +135,7 @@ const breadcrumbItems = [
         sw={sw}
       />
 
-      <LayoutSMDashboard/>
+      <LayoutSMDashboard />
 
       {/* <ScheduleList
         schedules={schedules}
@@ -126,11 +149,6 @@ const breadcrumbItems = [
     </div>
   );
 }
-
-
-
-
-
 
 // import { useState, useEffect } from "react";
 // import {
