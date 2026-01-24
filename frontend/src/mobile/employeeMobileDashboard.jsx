@@ -179,9 +179,6 @@ function EmployeeMobileDashboard() {
                     {employeeData.last_name}
                   </h1>
                   {/* Professional On Duty Badge - Responsive */}
-                  <div className="px-1.5 py-0.5 sm:px-2 sm:py-1 bg-linear-to-r from-green-500 to-green-600 text-white text-[10px] sm:text-xs font-bold rounded-full shadow-md border border-green-400">
-                    ON DUTY
-                  </div>
                 </div>
                 <p className="text-blue-100 text-sm mb-3">
                   {employeeData.position_name || "Employee"}
