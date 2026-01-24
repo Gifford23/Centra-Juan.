@@ -116,7 +116,7 @@ const ResetPassword = () => {
   }, [successPopup, countdown]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-white to-indigo-200 p-6">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-100 via-white to-indigo-200 p-6">
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -141,7 +141,7 @@ const ResetPassword = () => {
           {/* progress bar */}
           <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden mb-6">
             <div
-              className={`h-full bg-gradient-to-r from-sky-600 to-indigo-600 rounded-full transition-all`}
+              className={`h-full bg-linear-to-r from-sky-600 to-indigo-600 rounded-full transition-all`}
               style={{
                 width:
                   step === 1
@@ -190,7 +190,7 @@ const ResetPassword = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 inline-flex items-center justify-center gap-3 py-4 rounded-lg bg-gradient-to-r from-sky-600 to-indigo-600 text-white text-lg font-semibold shadow-md hover:opacity-95 transition"
+                  className="flex-1 inline-flex items-center justify-center gap-3 py-4 rounded-lg bg-linear-to-r from-sky-600 to-indigo-600 text-white text-lg font-semibold shadow-md hover:opacity-95 transition"
                 >
                   {loading ? (
                     "Sending..."
@@ -239,7 +239,7 @@ const ResetPassword = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 inline-flex items-center justify-center gap-3 py-4 rounded-lg bg-gradient-to-r from-sky-600 to-indigo-600 text-white text-lg font-semibold shadow-md hover:opacity-95 transition"
+                  className="flex-1 inline-flex items-center justify-center gap-3 py-4 rounded-lg bg-g-to-r from-sky-600 to-indigo-600 text-white text-lg font-semibold shadow-md hover:opacity-95 transition"
                 >
                   {loading ? "Verifying..." : "Verify Code"}
                 </button>
@@ -278,7 +278,7 @@ const ResetPassword = () => {
                   type="button"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-[-12px] top-1/2 -translate-y-1/2 z-10 bg-white border border-slate-200 rounded-full p-2 shadow-sm text-slate-600 hover:shadow-md transition"
+                  className="absolute -right-3 top-1/2 -translate-y-1/2 z-10 bg-white border border-slate-200 rounded-full p-2 shadow-sm text-slate-600 hover:shadow-md transition"
                 >
                   {showPassword ? (
                     <EyeOff className="w-5 h-5" />
@@ -311,7 +311,7 @@ const ResetPassword = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 inline-flex items-center justify-center gap-3 py-4 rounded-lg bg-gradient-to-r from-sky-600 to-indigo-600 text-white text-lg font-semibold shadow-md hover:opacity-95 transition"
+                  className="flex-1 inline-flex items-center justify-center gap-3 py-4 rounded-lg bg-linear-to-r from-sky-600 to-indigo-600 text-white text-lg font-semibold shadow-md hover:opacity-95 transition"
                 >
                   {loading ? "Resetting..." : "Reset Password"}
                 </button>
@@ -362,7 +362,7 @@ const ResetPassword = () => {
             <div className="flex gap-3">
               <a
                 href="https://hris.centraljuan.com"
-                className="flex-1 inline-flex items-center justify-center gap-2 py-2 rounded-lg bg-gradient-to-r from-sky-600 to-indigo-600 text-white text-sm font-semibold"
+                className="flex-1 inline-flex items-center justify-center gap-2 py-2 rounded-lg bg-linear-to-r from-sky-600 to-indigo-600 text-white text-sm font-semibold"
               >
                 Go to Login
               </a>

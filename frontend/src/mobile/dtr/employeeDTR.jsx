@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Swal from "sweetalert2";
 import BASE_URL from "../../../backend/server/config";
 import {
@@ -23,52 +23,55 @@ const EmployeeDTR = ({ employeeId }) => {
   const [loading, setLoading] = useState(true);
   const [dateRange, setDateRange] = useState({ start: "", end: "" });
 
-  const fetchAttendance = async (range = dateRange) => {
-    setLoading(true);
-    try {
-      const response = await fetch(`${BASE_URL}/attendance/attendance.php`);
-      const data = await response.json();
+  const fetchAttendance = useCallback(
+    async (range = dateRange) => {
+      setLoading(true);
+      try {
+        const response = await fetch(`${BASE_URL}/attendance/attendance.php`);
+        const data = await response.json();
 
-      if (data.success) {
-        let employeeAttendance = data.data.filter(
-          (item) => item.employee_id === employeeId,
-        );
+        if (data.success) {
+          let employeeAttendance = data.data.filter(
+            (item) => item.employee_id === employeeId,
+          );
 
-        const today = new Date();
-        today.setHours(23, 59, 59, 999);
+          const today = new Date();
+          today.setHours(23, 59, 59, 999);
 
-        if (range.start && range.end) {
-          const start = new Date(range.start);
-          const end = new Date(range.end);
-          employeeAttendance = employeeAttendance.filter((item) => {
-            const recordDate = new Date(item.attendance_date);
-            return recordDate >= start && recordDate <= end;
-          });
+          if (range.start && range.end) {
+            const start = new Date(range.start);
+            const end = new Date(range.end);
+            employeeAttendance = employeeAttendance.filter((item) => {
+              const recordDate = new Date(item.attendance_date);
+              return recordDate >= start && recordDate <= end;
+            });
+          } else {
+            employeeAttendance = employeeAttendance.filter((item) => {
+              const recordDate = new Date(item.attendance_date);
+              return recordDate <= today;
+            });
+          }
+
+          employeeAttendance.sort(
+            (a, b) => new Date(b.attendance_date) - new Date(a.attendance_date),
+          );
+
+          setAttendanceData(employeeAttendance);
         } else {
-          employeeAttendance = employeeAttendance.filter((item) => {
-            const recordDate = new Date(item.attendance_date);
-            return recordDate <= today;
-          });
+          console.error("Failed to fetch data");
         }
-
-        employeeAttendance.sort(
-          (a, b) => new Date(b.attendance_date) - new Date(a.attendance_date),
-        );
-
-        setAttendanceData(employeeAttendance);
-      } else {
-        console.error("Failed to fetch data");
+      } catch (error) {
+        console.error("API Error", error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("API Error", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [employeeId, dateRange],
+  );
 
   useEffect(() => {
     if (employeeId) fetchAttendance();
-  }, [employeeId]);
+  }, [employeeId, fetchAttendance]);
 
   const formatTime = (timeString) => {
     if (!timeString || timeString === "00:00:00") return null;
@@ -128,15 +131,15 @@ const EmployeeDTR = ({ employeeId }) => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden">
+    <div className="flex flex-col h-full bg-linear-to-br from-slate-50 via-blue-50/30 to-slate-50 rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden">
       {/* Enhanced Header with Stats */}
       <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200/50">
         {/* Toolbar */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 p-4 sm:p-6">
           <div className="flex items-center gap-4">
             <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl blur-md opacity-50 group-hover:opacity-75 transition-opacity"></div>
-              <div className="relative p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
+              <div className="absolute inset-0 bg-linear-to-br from-blue-500 to-indigo-600 rounded-xl blur-md opacity-50 group-hover:opacity-75 transition-opacity"></div>
+              <div className="relative p-3 bg-linear-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
                 <Calendar className="w-6 h-6 text-white" />
               </div>
             </div>
@@ -214,7 +217,7 @@ const EmployeeDTR = ({ employeeId }) => {
       {/* Enhanced Table - Desktop */}
       <div className="hidden lg:block overflow-x-auto flex-1 bg-white/50">
         <table className="w-full">
-          <thead className="sticky top-0 bg-gradient-to-r from-gray-50 to-slate-50 z-10">
+          <thead className="sticky top-0 bg-linear-to-r from-gray-50 to-slate-50 z-10">
             <tr className="border-b border-gray-200">
               <th className="py-4 px-6 text-left">
                 <div className="flex items-center gap-2">
@@ -283,7 +286,7 @@ const EmployeeDTR = ({ employeeId }) => {
               <tr>
                 <td colSpan="5" className="py-20 text-center bg-white">
                   <div className="flex flex-col items-center justify-center">
-                    <div className="p-5 bg-gradient-to-br from-gray-50 to-slate-50 rounded-2xl mb-4 border border-gray-200">
+                    <div className="p-5 bg-linear-to-br from-gray-50 to-slate-50 rounded-2xl mb-4 border border-gray-200">
                       <Search className="w-10 h-10 text-gray-300" />
                     </div>
                     <span className="text-base font-semibold text-gray-400">
@@ -336,7 +339,7 @@ const EmployeeDTR = ({ employeeId }) => {
                     </td>
 
                     <td className="py-5 px-6 text-center">
-                      <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 font-bold text-blue-700 text-base border-2 border-blue-200 shadow-sm">
+                      <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-linear-to-br from-blue-50 to-indigo-50 font-bold text-blue-700 text-base border-2 border-blue-200 shadow-sm">
                         {record.days_credited || 0}
                       </div>
                     </td>
@@ -369,7 +372,7 @@ const EmployeeDTR = ({ employeeId }) => {
           ))
         ) : attendanceData.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16">
-            <div className="p-5 bg-gradient-to-br from-gray-50 to-slate-50 rounded-2xl mb-4 border border-gray-200">
+            <div className="p-5 bg-linear-to-br from-gray-50 to-slate-50 rounded-2xl mb-4 border border-gray-200">
               <Search className="w-10 h-10 text-gray-300" />
             </div>
             <span className="text-base font-semibold text-gray-400">
@@ -390,7 +393,7 @@ const EmployeeDTR = ({ employeeId }) => {
                 className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow"
               >
                 {/* Card Header */}
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-4 py-3 border-b border-blue-100">
+                <div className="bg-linear-to-r from-blue-50 to-indigo-50 px-4 py-3 border-b border-blue-100">
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-bold text-gray-900 text-base">
@@ -409,7 +412,7 @@ const EmployeeDTR = ({ employeeId }) => {
                 {/* Card Content */}
                 <div className="p-4 space-y-4">
                   {/* Morning Shift */}
-                  <div className="bg-gradient-to-br from-blue-50/50 to-indigo-50/50 rounded-xl p-3 border border-blue-100">
+                  <div className="bg-linear-to-br from-blue-50/50 to-indigo-50/50 rounded-xl p-3 border border-blue-100">
                     <div className="flex items-center gap-2 mb-2">
                       <Clock className="w-4 h-4 text-blue-600" />
                       <span className="text-xs font-bold text-blue-700 uppercase tracking-wide">
@@ -423,7 +426,7 @@ const EmployeeDTR = ({ employeeId }) => {
                   </div>
 
                   {/* Afternoon Shift */}
-                  <div className="bg-gradient-to-br from-amber-50/50 to-orange-50/50 rounded-xl p-3 border border-amber-100">
+                  <div className="bg-linear-to-br from-amber-50/50 to-orange-50/50 rounded-xl p-3 border border-amber-100">
                     <div className="flex items-center gap-2 mb-2">
                       <Clock className="w-4 h-4 text-amber-600" />
                       <span className="text-xs font-bold text-amber-700 uppercase tracking-wide">
@@ -441,7 +444,7 @@ const EmployeeDTR = ({ employeeId }) => {
                     <span className="text-sm font-semibold text-gray-600">
                       Days Credited
                     </span>
-                    <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 font-bold text-blue-700 text-base border-2 border-blue-200">
+                    <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg--to-br from-blue-50 to-indigo-50 font-bold text-blue-700 text-base border-2 border-blue-200">
                       {record.days_credited || 0}
                     </div>
                   </div>
@@ -484,7 +487,7 @@ const StatCard = ({ label, value, icon, color }) => {
   return (
     <div className="relative group">
       <div
-        className={`absolute inset-0 bg-gradient-to-br ${classes.split(" ")[0]} ${classes.split(" ")[1]} rounded-xl blur-md opacity-0 group-hover:opacity-20 transition-opacity`}
+        className={`absolute inset-0 bg-linear-to-br ${classes.split(" ")[0]} ${classes.split(" ")[1]} rounded-xl blur-md opacity-0 group-hover:opacity-20 transition-opacity`}
       ></div>
       <div
         className={`relative bg-white rounded-xl p-3 sm:p-4 border ${classes.split(" ").slice(-1)} shadow-sm hover:shadow-md transition-shadow`}
@@ -520,8 +523,8 @@ const TimeCell = ({ inTime, outTime }) => {
   return (
     <div className="flex flex-col gap-2 min-h-[52px] justify-center">
       <div className="flex items-center gap-3">
-        <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50 flex-shrink-0"></div>
-        <span className="text-xs text-gray-500 font-semibold w-7 flex-shrink-0">
+        <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50 shrink-0"></div>
+        <span className="text-xs text-gray-500 font-semibold w-7 shrink-0">
           IN
         </span>
         <span className="text-sm font-mono font-bold text-gray-800">
@@ -529,8 +532,8 @@ const TimeCell = ({ inTime, outTime }) => {
         </span>
       </div>
       <div className="flex items-center gap-3">
-        <div className="w-2 h-2 rounded-full bg-orange-500 shadow-sm shadow-orange-500/50 flex-shrink-0"></div>
-        <span className="text-xs text-gray-500 font-semibold w-7 flex-shrink-0">
+        <div className="w-2 h-2 rounded-full bg-orange-500 shadow-sm shadow-orange-500/50 shrink-0"></div>
+        <span className="text-xs text-gray-500 font-semibold w-7 shrink-0">
           OUT
         </span>
         <span className="text-sm font-mono font-bold text-gray-800">
