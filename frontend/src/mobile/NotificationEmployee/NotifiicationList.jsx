@@ -255,7 +255,7 @@ const NotificationList = () => {
     return (
       <div className="flex flex-col w-full h-screen items-center justify-center p-4 bg-gray-50">
         <div className="max-w-md text-center bg-white p-8 rounded-xl shadow border border-gray-100">
-          <div className="p-3 bg-red-100 rounded-full w-fit mx-auto mb-4 text-red-600">
+          <div className="p-3 bg-red-100 rounded-full w-fit mx-auto mb-4 text-orange-500">
             <AlertCircle size={32} />
           </div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">
@@ -427,7 +427,7 @@ const NotificationList = () => {
                           </div>
                         </div>
                         <div className="bg-white p-2 rounded border border-gray-100 shadow-sm w-full">
-                          <span className="text-[10px] uppercase font-bold text-orange-600 tracking-wide block mb-1">
+                          <span className="text-[10px] uppercase font-bold text-orange-500 tracking-wide block mb-1">
                             Afternoon Shift
                           </span>
                           <div className="font-mono text-gray-800 font-medium break-words text-xs sm:text-sm">
